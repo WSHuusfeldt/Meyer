@@ -3,11 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+package Functionality;
+
+import Entity.Player;
 
 /**
  *
- * @author APC
+ * @author emilt
  */
-public class Player {
+public class Game {
+    
+    public int amountOfPlayers;
+    public Player[] players;
     
 }
