@@ -12,18 +12,28 @@ package Entity;
  */
 public class Player {
     
+    private String name;
     private int lifeTotal;
     private Dice[] diceValue;
 
-    public Player(int lifeTotal, Dice[] value) {
+    public Player(String name, int lifeTotal, Dice[] value) {
+        this.name = name;
         this.lifeTotal = lifeTotal;
         this.diceValue = value;
     }
     
-    public Player newPlayer() {
-        return new Player(6, null);        
+    public Player newPlayer(String name) {
+        return new Player(name, 6, null);        
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    
     public int getLifeTotal() {
         return lifeTotal;
     }
