@@ -26,16 +26,20 @@ public class Player {
         return new Player(6, null, name);        
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    
     public int getLifeTotal() {
         return lifeTotal;
     }
 
     public Dice[] getValue() {
         return diceValue;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
     
         public void setValue(Dice[] value) {
