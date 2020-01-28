@@ -63,7 +63,6 @@ public class Game {
             }
         }
         
-        
 
         //Running game
         while(this.game) {
