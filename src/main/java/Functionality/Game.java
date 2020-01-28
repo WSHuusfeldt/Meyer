@@ -29,11 +29,12 @@ public class Game {
         
     }
     
-    public int checkRole(int val, int val2) {
+    public int getDiceValue(int val, int val2) {
         if (val > val2)
             return Integer.valueOf(String.valueOf(val) + String.valueOf(val2));
         return Integer.valueOf(String.valueOf(val2) + String.valueOf(val));
     } 
+    
     
     
 }
