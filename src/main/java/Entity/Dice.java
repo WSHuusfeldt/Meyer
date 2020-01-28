@@ -45,6 +45,12 @@ public class Dice {
         else if (val > val2)
             return Integer.valueOf(String.valueOf(val) + String.valueOf(val2));
         
+        else if(val == 3 && val2 == 2)
+            return checkBeerMeyer(Integer.valueOf(String.valueOf(val) + String.valueOf(val2)));
+        
+        else if(val == 2 && val2 == 3)
+            return checkBeerMeyer(Integer.valueOf(String.valueOf(val2) + String.valueOf(val)));
+        
         return Integer.valueOf(String.valueOf(val2) + String.valueOf(val));
     }
     
@@ -65,6 +71,13 @@ public class Dice {
             return val*75;
         return val;
     }
+    
+   public int checkBeerMeyer(int val){
+       if(val == 32){
+           return val*100;
+       }
+       return val;
+   }
     
     
     //compares current players dice throw to earlier players fice value

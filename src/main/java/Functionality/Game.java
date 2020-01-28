@@ -37,7 +37,6 @@ public class Game {
             System.out.println(amountOfPlayers);
 
         }
-        //Check om ^^ er gyldigt svar
 
     }
 
