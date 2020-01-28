@@ -13,8 +13,8 @@ public class Dice {
     
     private int faceValue;
 
-    public Dice(int faceValue) {
-        this.faceValue = faceValue;
+    public Dice() {
+        this.faceValue = 0;
     }
 
     public int getFaceValue() {
