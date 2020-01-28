@@ -14,14 +14,16 @@ public class Player {
     
     private int lifeTotal;
     private Dice[] diceValue;
+    private String name;
 
-    public Player(int lifeTotal, Dice[] value) {
+    public Player(int lifeTotal, Dice[] value, String name) {
         this.lifeTotal = lifeTotal;
         this.diceValue = value;
+        this.name = name;
     }
     
-    public Player newPlayer() {
-        return new Player(6, null);        
+    public Player newPlayer(String name) {
+        return new Player(6, null, name);        
     }
 
     public int getLifeTotal() {
@@ -32,7 +34,11 @@ public class Player {
         return diceValue;
     }
 
-    public void setValue(Dice[] value) {
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+        public void setValue(Dice[] value) {
         this.diceValue = value;
     }
     

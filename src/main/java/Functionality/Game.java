@@ -6,6 +6,7 @@
 package Functionality;
 
 import Entity.Player;
+import java.util.Scanner;
 
 /**
  *
@@ -15,5 +16,19 @@ public class Game {
     
     public int amountOfPlayers;
     public Player[] players;
+    
+    
+    public void setUp() {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter amount of players");
+        String amountOfPlayers = sc.nextLine();
+        
+        //Check om ^^ er gyldigt svar
+        
+        System.out.println(amountOfPlayers);
+        
+    }
+    
+    
     
 }

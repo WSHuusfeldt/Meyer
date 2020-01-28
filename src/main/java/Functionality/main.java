@@ -15,7 +15,9 @@ public class main {
     
     public static void main(String[] args) {
         
-        Dice dice = new Dice(0);
+        Game game = new Game();
+        
+        game.setUp();
         
         
     }
