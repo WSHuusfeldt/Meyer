@@ -15,32 +15,50 @@ import java.util.Scanner;
  * @author emilt
  */
 public class Game {
-    
+
     public int amountOfPlayers;
     public ArrayList<Player> players = new ArrayList();
     public boolean game = true;
     
     public void run() {
-        clearScreen();
+        
         //Game setup
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter amount of players");
-        String amountOfPlayers = sc.nextLine();
         Dice d1 = new Dice();
         Dice d2 = new Dice();
         
-        //Check om ^^ er gyldigt svar        
-        System.out.println(amountOfPlayers);
+        String playerInput = sc.nextLine();
+        for (char c : playerInput.toCharArray()) {
+            if (!Character.isDigit(c)) {
+                clearScreen();
+                System.out.println("Must be a number");
+                run();
+                break;
+            }
+        }
+        int parsedPlayers = Integer.parseInt(playerInput);
+        if (parsedPlayers <= 1 || parsedPlayers > 6) {
+            clearScreen();
+            System.out.println("You can only be 2-6 players");
+            run();
+        } else {
+            amountOfPlayers = parsedPlayers;            
+        }
+        clearScreen();
         
-        for (int i = 0; i < 3; ++i) {
+        
+        for (int i = 0; i < amountOfPlayers; ++i) {
             System.out.println("Enter the name of player " + (i+1));
             String nameOfPlayer = sc.nextLine();
             System.out.println("Is this name fine: " + nameOfPlayer + "?. 'y' for yes - everything else for no");
             String checkNameOfPlayer = sc.nextLine();
             if (checkNameOfPlayer.equals("y")) {
                 players.add(new Player(nameOfPlayer));
+                clearScreen();
             } else {
                 --i;
+                clearScreen();
             }
         }
         
