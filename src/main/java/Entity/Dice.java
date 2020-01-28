@@ -75,8 +75,8 @@ public class Dice {
     }
     
     public static void main(String[] args) {
-        Dice d = new Dice(0);
-        Dice d2 = new Dice(0);
+        Dice d = new Dice();
+        Dice d2 = new Dice();
         d.rollDice();
         d2.rollDice();
         

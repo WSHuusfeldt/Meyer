@@ -19,6 +19,7 @@ public class Game {
     public int amountOfPlayers;
     public ArrayList<Player> players = new ArrayList();
     public boolean game = true;
+    private int currentValue = 0;
     
     public void run() {
         
@@ -82,6 +83,11 @@ public class Game {
                     
                     System.out.println("Do you wish to lie about your number? - 'y' for yes, everything else for no");
                     String checkLieOfPlayer = sc.nextLine();
+                    if (checkLieOfPlayer.equals("y")) {
+                        //do something
+                    } else {
+                        
+                    }
                     
                 }
             }
