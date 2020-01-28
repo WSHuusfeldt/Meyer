@@ -22,8 +22,10 @@ public class Player {
         this.name = name;
     }
     
-    public Player newPlayer(String name) {
-        return new Player(6, null, name);        
+    public Player(String name) {
+        this.lifeTotal = 6;
+        this.diceValue = null;
+        this.name = name;   
     }
 
     public String getName() {

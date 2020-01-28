@@ -15,10 +15,8 @@ public class main {
     
     public static void main(String[] args) {
         
-        Game game = new Game();
-        
-        game.setUp();
-        
+        Game game = new Game();        
+        game.run();        
         
     }
     
