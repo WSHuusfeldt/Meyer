@@ -38,6 +38,10 @@ public class Player {
         this.name = name;
     }
 
+    public void setLifeTotal(int lifeTotal) {
+        this.lifeTotal = lifeTotal;
+    }
+
     public int getLifeTotal() {
         return lifeTotal;
     }

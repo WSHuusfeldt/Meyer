@@ -21,6 +21,10 @@ public class Dice {
         return faceValue;
     }
 
+    public void setFaceValue(int faceValue) {
+        this.faceValue = faceValue;
+    }
+    
     public void rollDice() {
         this.faceValue = (int) (Math.random()*6)+1;
     }

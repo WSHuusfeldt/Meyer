@@ -74,7 +74,8 @@ public class Game {
                 Player currentPlayer = players.get(i);
                 if (currentPlayer.getLifeTotal() > 0) {
                     System.out.println("It is your turn " + currentPlayer.getName());
-                    System.out.println("The current value to beat is " + currentValue);
+                    //Den afslører hvad man har fået i et "det eller det over"
+                   // System.out.println("The current value to beat is " + currentValue);
                     System.out.println("The last player said they got: " + lastTurnSaidValue + ". Do you believe that? - 'y' for yes, everything else for no");
 
                     String checkTrustOfPlayer = sc.nextLine();
@@ -91,33 +92,64 @@ public class Game {
 
                         if (getDiceValue(d1.getFaceValue(), d2.getFaceValue()) >= currentValue) {
                             if (checkLieOfPlayer.equals("y")) {
-                                //do something
+                                currentValue = getDiceValue(d1.getFaceValue(), d2.getFaceValue());
+                                lastTurnActualValue = getDiceValue(d1.getFaceValue(), d2.getFaceValue());
+                                System.out.println("Enter value for first dice: ");
+                                System.out.println("Remember, must be a valid number, and is just the value of one dice.");
+                                String dice1Lie = sc.nextLine();
+                                d1.setFaceValue(Integer.parseInt(dice1Lie));
+                                System.out.println("Perfect, now enter value for second dice: ");
+                                String dice2Lie = sc.nextLine();
+                                d2.setFaceValue(Integer.parseInt(dice2Lie));
+                                lastTurnSaidValue = getDiceValue(d1.getFaceValue(), d2.getFaceValue());
                             } else {
                                 currentValue = getDiceValue(d1.getFaceValue(), d2.getFaceValue());
                                 lastTurnActualValue = getDiceValue(d1.getFaceValue(), d2.getFaceValue());
+                                lastTurnSaidValue = getDiceValue(d1.getFaceValue(), d2.getFaceValue());
                             }
                         } else {
                             System.out.println("You have rolled a number lower than the current value.");
                             System.out.println("Do you wish to lie about your number? - 'y' for yes, everything else for a hidden reroll");
                             checkLieOfPlayer = sc.nextLine();
                             if (checkLieOfPlayer.equals("y")) {
-                                //do something
+                                System.out.println("Enter value for first dice: ");
+                                System.out.println("Remember, must be a valid number, and is just the value of one dice.");
+                                String dice1Lie = sc.nextLine();
+                                d1.setFaceValue(Integer.parseInt(dice1Lie));
+                                System.out.println("Perfect, now enter value for second dice: ");
+                                String dice2Lie = sc.nextLine();
+                                d2.setFaceValue(Integer.parseInt(dice2Lie));
+                                currentValue = getDiceValue(d1.getFaceValue(), d2.getFaceValue());
+                                lastTurnSaidValue = getDiceValue(d1.getFaceValue(), d2.getFaceValue());
                             } else {
-                                //do something
+                                d1.rollDice();
+                                d2.rollDice();
+                                currentValue = getDiceValue(d1.getFaceValue(), d2.getFaceValue());
                             }
                         }
                     } else {
+                        if(lastTurnActualValue <= currentValue || lastTurnSaidValue <= currentValue){
+                            System.out.println("It was true! you should trust a hidden roll sometimes.");
+                            players.get(i).setLifeTotal(players.get(i).getLifeTotal() - 1);
+                        } else {
+                            System.out.println("They didn't roll higher! They've lost! They rolled" + currentValue);
+                             if (i == 0) {
+                                players.get(amountOfPlayers).setLifeTotal(players.get(amountOfPlayers).getLifeTotal() - 1);
+                            } else {
+                                players.get(i - 1).setLifeTotal(players.get(i - 1).getLifeTotal() - 1);
+                            }
+                        }
                         System.out.println("They said they had " + lastTurnSaidValue);
                         sc.nextLine();
-                        if (lastTurnActualValue == lastTurnActualValue) {
+                        if (lastTurnActualValue == lastTurnSaidValue) {
                             System.out.println("And it was true! You have lost life.");
-                            players.get(i).setLifeTotal(players.get(i).getLifeTotal()-1);
+                            players.get(i).setLifeTotal(players.get(i).getLifeTotal() - 1);
                         } else {
                             System.out.println("And they lied! They have lost life.");
                             if (i == 0) {
-                                players.get(amountOfPlayers).setLifeTotal(players.get(amountOfPlayers).getLifeTotal()-1);
+                                players.get(amountOfPlayers).setLifeTotal(players.get(amountOfPlayers).getLifeTotal() - 1);
                             } else {
-                                players.get(i-1).setLifeTotal(players.get(i-1).getLifeTotal()-1);
+                                players.get(i - 1).setLifeTotal(players.get(i - 1).getLifeTotal() - 1);
                             }
                         }
                     }
