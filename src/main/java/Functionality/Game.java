@@ -51,6 +51,8 @@ public class Game {
         }
         clearScreen();
 
+        
+        
         for (int i = 0; i < amountOfPlayers; ++i) {
             System.out.println("Enter the name of player " + (i + 1));
             String nameOfPlayer = sc.nextLine();
