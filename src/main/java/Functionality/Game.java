@@ -51,6 +51,8 @@ public class Game {
         }
         clearScreen();
 
+        
+        
         for (int i = 0; i < amountOfPlayers; ++i) {
             System.out.println("Enter the name of player " + (i + 1));
             String nameOfPlayer = sc.nextLine();
@@ -91,7 +93,41 @@ public class Game {
 
                         if (getDiceValue(d1.getFaceValue(), d2.getFaceValue()) >= currentValue) {
                             if (checkLieOfPlayer.equals("y")) {
-                                //do something
+                                boolean check = true;
+                                int chosenLie1 = 0;
+                                int chosenLie2 = 0;
+                                while (check) {                                    
+                                    check = false;
+                                    System.out.println("Write the first number you will lie about");
+                                    String lieValue1 = sc.nextLine();
+                                    for (char c : playerInput.toCharArray()) {
+                                        if (!Character.isDigit(c)) {
+                                            clearScreen();
+                                            System.out.println("Must be a number");
+                                            check = true;
+                                            break;
+                                        }
+                                    }
+                                    chosenLie1 = Integer.parseInt(lieValue1);
+                                    //Tag højde for om det er en lovlig 
+                                }
+                                check = true;
+                                while (check) {
+                                    check = false;
+                                    System.out.println("Write the second number you will lie about");
+                                    String lieValue = sc.nextLine();
+                                    for (char c : playerInput.toCharArray()) {
+                                        if (!Character.isDigit(c)) {
+                                            clearScreen();
+                                            System.out.println("Must be a number");
+                                            check = true;
+                                            break;
+                                        }
+                                    }
+                                    chosenLie2 = Integer.parseInt(lieValue);
+                                    //Tag højde for om det er en lovlig 
+                                }
+                                
                             } else {
                                 currentValue = getDiceValue(d1.getFaceValue(), d2.getFaceValue());
                                 lastTurnActualValue = getDiceValue(d1.getFaceValue(), d2.getFaceValue());
@@ -111,13 +147,13 @@ public class Game {
                         sc.nextLine();
                         if (lastTurnActualValue == lastTurnActualValue) {
                             System.out.println("And it was true! You have lost life.");
-                            players.get(i).setLifeTotal(players.get(i).getLifeTotal()-1);
+                            players.get(i).setLifeTotal(players.get(i).getLifeTotal() - 1);
                         } else {
                             System.out.println("And they lied! They have lost life.");
                             if (i == 0) {
-                                players.get(amountOfPlayers).setLifeTotal(players.get(amountOfPlayers).getLifeTotal()-1);
+                                players.get(amountOfPlayers).setLifeTotal(players.get(amountOfPlayers).getLifeTotal() - 1);
                             } else {
-                                players.get(i-1).setLifeTotal(players.get(i-1).getLifeTotal()-1);
+                                players.get(i - 1).setLifeTotal(players.get(i - 1).getLifeTotal() - 1);
                             }
                         }
                     }
