@@ -46,10 +46,8 @@ public class Run {
                 //If it is the first turn of the round.
                 if (currentValue == 0) {
                     newTurn(currentPlayer);
-                    //Roll the dices
                     rollDices();
                     chooseRoll();
-
                     answerRoll(currentPlayer, answeringPlayer);
                 } //Otherwise.
                 else {
@@ -58,18 +56,13 @@ public class Run {
                     chooseRoll();
                     answerRoll(currentPlayer, answeringPlayer);
                 }
-
-                //Removes players with no life total.
                 removeDeadPlayers();
-                //Checks if there is a winner
                 if (checkForWinners()) {
                     break;
                 }
             }
         }
-
         System.out.println(players.get(0).getName() + " has won the game!");
-
     }
 
     //Helping methods    
@@ -124,7 +117,7 @@ public class Run {
         }
     }
 
-    //Check if players have 0 or less life
+    //Checks and removes if players have 0 or less life
     public void removeDeadPlayers() {
         for (int i = 0; i < players.size(); ++i) {
             if (players.get(i).getLifeTotal() <= 0) {
