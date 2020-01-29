@@ -50,9 +50,7 @@ public class Player {
         return diceValue;
     }
 
-    public void setLifeTotal(int lifeTotal) {
-        this.lifeTotal = lifeTotal;
-    }
+
 
     
 
