@@ -16,6 +16,7 @@ import java.util.Scanner;
  * @author emilt
  */
 public class Run {
+
     Random ran = new Random();
     Scanner sc = new Scanner(System.in);
     public int amountOfPlayers;
@@ -52,21 +53,34 @@ public class Run {
                 //If it is the first turn of the round.
                 if (currentValue == 0) {
                     newTurn(currentPlayer);
-                    rollDices();
-                    chooseRoll();
-                    answerRoll(currentPlayer, answeringPlayer);
-                } //Otherwise.
-                else if (currentPlayer.isBot() == true){
-                        newNextTurn(currentPlayer);
+                    if (currentPlayer.isBot() == true) {
                         botRollDice();
                         botRollChoice();
+                    } else {
+                        rollDices();
+                        chooseRoll();
+                    }
+                    if (answeringPlayer.isBot() == false) {
                         answerRoll(currentPlayer, answeringPlayer);
-                }
-                else {
+                    }
+                    botAnswerRoll(currentPlayer, answeringPlayer);
+                } //Otherwise.
+                else if (currentPlayer.isBot() == true) {
+                    newNextTurn(currentPlayer);
+                    botRollDice();
+                    botRollChoice();
+                    if (answeringPlayer.isBot() == false) {
+                        answerRoll(currentPlayer, answeringPlayer);
+                    }
+                    botAnswerRoll(currentPlayer, answeringPlayer);
+                } else {
                     newNextTurn(currentPlayer);
                     rollDices();
                     chooseRoll();
-                    answerRoll(currentPlayer, answeringPlayer);
+                    if (answeringPlayer.isBot() == false) {
+                        answerRoll(currentPlayer, answeringPlayer);
+                    }
+                    botAnswerRoll(currentPlayer, answeringPlayer);
                 }
                 removeDeadPlayers();
                 if (checkForWinners()) {
@@ -103,12 +117,12 @@ public class Run {
                 setUpBotAmount();
                 return;
             }
-            
+
             amountOfBots = parsedBots;
             clearScreen();
         }
     }
-    
+
     //Setup the names of the bots.
     public void setUpBotNames() {
         //Loop for a number of times equal to the amountOfPlayers
@@ -254,6 +268,66 @@ public class Run {
         }
     }
 
+    public void botAnswerRoll(Player currentPlayer, Player answeringPlayer) throws InterruptedException {
+        clearScreen();
+        String check = "";
+        if (this.currentReroll) {
+            System.out.println(currentPlayer.getName() + " made a random reroll.");
+            System.out.println(answeringPlayer.getName() + ", do you believe they rolled higher than " + currentValue + "?");
+            Thread.sleep(5500);
+        } else {
+            System.out.println(currentPlayer.getName() + " said they got: " + this.lastTurnSaidValue);
+            System.out.println(answeringPlayer.getName() + ", do you believe what they said?");
+            Thread.sleep(5500);
+        }
+
+        if (this.currentReroll) {
+            if (ran.nextBoolean() == false) {
+                if (lastTurnActualValue >= currentValue) {
+                    System.out.println(answeringPlayer.getName() + " chose NO");
+                    Thread.sleep(1000);
+                    System.out.println("Sorry, they did roll higher. " + currentPlayer.getName() + " rolled " + lastTurnActualValue);
+                    System.out.println(answeringPlayer.getName() + " you have lost a life point.");
+                    answeringPlayer.setLifeTotal(answeringPlayer.getLifeTotal() - 1);
+                    this.currentValue = 0;
+                    this.currentReroll = false;
+                    Thread.sleep(5500);
+                } else {
+                    System.out.println(answeringPlayer.getName() + " chose YES");
+                    Thread.sleep(1000);
+                    System.out.println("You are correct! " + currentPlayer.getName() + " only rolled " + lastTurnActualValue);
+                    System.out.println(currentPlayer.getName() + " you have lost a life point.");
+                    currentPlayer.setLifeTotal(currentPlayer.getLifeTotal() - 1);
+                    this.currentValue = 0;
+                    this.currentReroll = false;
+                    Thread.sleep(5500);
+                }
+            }
+        } else {
+            if (ran.nextBoolean() == true) {
+                this.currentValue = this.lastTurnSaidValue;
+            } else {
+                if (lastTurnSaidValue == lastTurnActualValue) {
+                    System.out.println(answeringPlayer.getName() + " chose NO");
+                    Thread.sleep(1000);
+                    System.out.println("Sorry but " + currentPlayer.getName() + " told the truth!");
+                    System.out.println(answeringPlayer.getName() + " you have lost a life point.");
+                    answeringPlayer.setLifeTotal(answeringPlayer.getLifeTotal() - 1);
+                    this.currentValue = 0;
+                    Thread.sleep(5500);
+                } else {
+                    System.out.println(answeringPlayer.getName() + " chose YES");
+                    Thread.sleep(1000);
+                    System.out.println("You are correct! " + currentPlayer.getName() + " lied!");
+                    System.out.println(currentPlayer.getName() + " you have lost a life point.");
+                    currentPlayer.setLifeTotal(currentPlayer.getLifeTotal() - 1);
+                    this.currentValue = 0;
+                    Thread.sleep(5500);
+                }
+            }
+        }
+    }
+
     //Clears the screen by spamming empty lines.
     public void clearScreen() {
         for (int i = 0; i < 100; ++i) {
@@ -264,7 +338,7 @@ public class Run {
     //Clears the turn
     public void newTurn(Player player) throws InterruptedException {
         clearScreen();
-        if(player.isBot() == true) {
+        if (player.isBot() == true) {
             System.out.println("Bot " + player.getName() + " it's your turn.");
             System.out.println("You currently have: " + player.getLifeTotal() + " lives.");
             Thread.sleep(5000);
@@ -280,7 +354,7 @@ public class Run {
     public void newNextTurn(Player player) throws InterruptedException {
         newTurn(player);
         System.out.println("The current value to beat is: " + this.currentValue);
-        sc.nextLine();
+        Thread.sleep(3000);
     }
 
     //Sets the dices to random numbers between 1 - 6 after a scanner nextline.
@@ -292,7 +366,7 @@ public class Run {
         System.out.println("You have rolled " + dice1.getFaceValue() + " and " + dice2.getFaceValue());
         sc.nextLine();
     }
-    
+
     public void botRollDice() {
         dice1.rollDice();
         dice2.rollDice();
@@ -335,12 +409,13 @@ public class Run {
             chooseRoll();
         }
     }
-    
+
     public void botRollChoice() {
         if (currentValue > getDiceValue(dice1.getFaceValue(), dice2.getFaceValue())) {
-           if ((ran.nextInt(9) + 1) % 2 == 0)
-               botLieRoll();
-           reRoll();
+            if ((ran.nextInt(9) + 1) % 2 == 0) {
+                botLieRoll();
+            }
+            reRoll();
         } else {
             truthRoll();
         }
@@ -424,16 +499,16 @@ public class Run {
         lastTurnSaidValue = getDiceValue(parsedDie1, parsedDie2);
 
     }
-    
+
     public void botLieRoll() {
         Random rand = new Random();
         int parsedDie1 = rand.nextInt(6) + 1;
         int parsedDie2 = rand.nextInt(6) + 1;
-        
+
         if (currentValue > getDiceValue(parsedDie1, parsedDie2)) {
             lieRoll();
         }
-        
+
         lastTurnActualValue = getDiceValue(dice1.getFaceValue(), dice2.getFaceValue());
         lastTurnSaidValue = getDiceValue(parsedDie1, parsedDie2);
     }
