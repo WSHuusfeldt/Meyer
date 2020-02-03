@@ -237,7 +237,7 @@ public class Run {
         } //Truth
         else if (mode.equals("T")) {
             if (this.currentValue != 0) {
-                if (this.currentValue > getDiceValue(dice1.getFaceValue(), dice2.getFaceValue())) {
+                if (this.currentValue == getDiceValue(dice1.getFaceValue(), dice2.getFaceValue())) {
                     System.out.println("Sorry you can't pick this option, you have rolled to low!");
                     chooseRoll();
                     return;
@@ -365,12 +365,11 @@ public class Run {
             return checkSmallMeyer(Integer.valueOf(String.valueOf(val2) + String.valueOf(val)));
         } else if (val2 == val) {
             return checkPair(Integer.valueOf(String.valueOf(val2) + String.valueOf(val)));
-        } else if (val > val2) {
-            return Integer.valueOf(String.valueOf(val) + String.valueOf(val2));
-        } else if (val == 3 && val2 == 2) {
+        } else if (val == 3 && val2 == 2 || val == 2 && val2 == 3) {
             return checkBeerMeyer(Integer.valueOf(String.valueOf(val) + String.valueOf(val2)));
-        } else if (val == 2 && val2 == 3) {
-            return checkBeerMeyer(Integer.valueOf(String.valueOf(val2) + String.valueOf(val)));
+        }  
+        else if (val > val2) {
+            return Integer.valueOf(String.valueOf(val) + String.valueOf(val2));
         }
         return Integer.valueOf(String.valueOf(val2) + String.valueOf(val));
     }
@@ -398,7 +397,7 @@ public class Run {
     }
 
     public int checkBeerMeyer(int val) {
-        if (val == 32) {
+        if (val == 32 || val == 23) {
             return val * 10000;
         }
         return val;
