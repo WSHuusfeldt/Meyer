@@ -5,7 +5,6 @@
  */
 package Functionality;
 
-import Entity.Dice;
 
 /**
  *
@@ -13,11 +12,11 @@ import Entity.Dice;
  */
 public class main {
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         
         Run run = new Run();
         run.run();
-        
+
     }
     
 }

@@ -8,6 +8,7 @@ package Functionality;
 import Entity.Dice;
 import Entity.Player;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -15,9 +16,10 @@ import java.util.Scanner;
  * @author emilt
  */
 public class Run {
-
+    Random ran = new Random();
     Scanner sc = new Scanner(System.in);
     public int amountOfPlayers;
+    public int amountOfBots;
     public ArrayList<Player> players = new ArrayList();
     public boolean game = true;
 
@@ -31,10 +33,14 @@ public class Run {
     private boolean currentReroll = false;
 
     //Main method
-    public void run() {
+    public void run() throws InterruptedException {
         clearScreen();
         setUpPlayerAmount();
         setUpPlayerNames();
+        if (this.amountOfPlayers < 6) {
+            setUpBotAmount();
+            setUpBotNames();
+        }
 
         //Loop that runs for entirety of the game.
         while (game) {
@@ -50,6 +56,12 @@ public class Run {
                     chooseRoll();
                     answerRoll(currentPlayer, answeringPlayer);
                 } //Otherwise.
+                else if (currentPlayer.isBot() == true){
+                        newNextTurn(currentPlayer);
+                        botRollDice();
+                        botRollChoice();
+                        answerRoll(currentPlayer, answeringPlayer);
+                }
                 else {
                     newNextTurn(currentPlayer);
                     rollDices();
@@ -63,6 +75,59 @@ public class Run {
             }
         }
         System.out.println(players.get(0).getName() + " has won the game!");
+    }
+
+    public void setUpBotAmount() {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Would you like to add bot(s)? Press 'y' for yes, anything else for no");
+        String playerInput = sc.nextLine();
+        if (playerInput.equals("y")) {
+            System.out.println("Enter amount of bots");
+            String botNumber = sc.nextLine();
+
+            //Exception 1 - not a number
+            for (char c : botNumber.toCharArray()) {
+                if (!Character.isDigit(c)) {
+                    clearScreen();
+                    System.out.println("Must be a number");
+                    setUpBotAmount();
+                    return;
+                }
+            }
+
+            //Exception 2 - Not a legal number
+            int parsedBots = Integer.parseInt(botNumber);
+            if (parsedBots <= 0 || parsedBots > (6 - amountOfPlayers)) {
+                clearScreen();
+                System.out.println("You can only be 6 players including bots");
+                setUpBotAmount();
+                return;
+            }
+            
+            amountOfBots = parsedBots;
+            clearScreen();
+        }
+    }
+    
+    //Setup the names of the bots.
+    public void setUpBotNames() {
+        //Loop for a number of times equal to the amountOfPlayers
+        for (int i = 0; i < amountOfBots; ++i) {
+            System.out.println("Enter the name of bot " + (i + 1));
+            String nameOfPlayer = sc.nextLine();
+            System.out.println("Is this name fine: " + nameOfPlayer + "?. 'y' for yes - everything else for no");
+            String checkNameOfPlayer = sc.nextLine();
+
+            //Checks wether the user is satisfied with the given name
+            if (checkNameOfPlayer.equals("y")) {
+                players.add(new Player(nameOfPlayer, true));
+                clearScreen();
+                //Otherwise loop through the same index
+            } else {
+                --i;
+                clearScreen();
+            }
+        }
     }
 
     //Helping methods    
@@ -197,8 +262,14 @@ public class Run {
     }
 
     //Clears the turn
-    public void newTurn(Player player) {
+    public void newTurn(Player player) throws InterruptedException {
         clearScreen();
+        if(player.isBot() == true) {
+            System.out.println("Bot " + player.getName() + " it's your turn.");
+            System.out.println("You currently have: " + player.getLifeTotal() + " lives.");
+            Thread.sleep(5000);
+            return;
+        }
         System.out.println(player.getName() + " it is your turn.");
         System.out.println("You currently have: " + player.getLifeTotal() + " lives.");
         System.out.println("Press enter.");
@@ -206,7 +277,7 @@ public class Run {
     }
 
     //Takes into a count if it isn't turn one.
-    public void newNextTurn(Player player) {
+    public void newNextTurn(Player player) throws InterruptedException {
         newTurn(player);
         System.out.println("The current value to beat is: " + this.currentValue);
         sc.nextLine();
@@ -220,6 +291,11 @@ public class Run {
         dice2.rollDice();
         System.out.println("You have rolled " + dice1.getFaceValue() + " and " + dice2.getFaceValue());
         sc.nextLine();
+    }
+    
+    public void botRollDice() {
+        dice1.rollDice();
+        dice2.rollDice();
     }
 
     //Lets the player decide to lie or go with the roll.
@@ -259,10 +335,21 @@ public class Run {
             chooseRoll();
         }
     }
+    
+    public void botRollChoice() {
+        if (currentValue > getDiceValue(dice1.getFaceValue(), dice2.getFaceValue())) {
+           if ((ran.nextInt(9) + 1) % 2 == 0)
+               botLieRoll();
+           reRoll();
+        } else {
+            truthRoll();
+        }
+    }
 
     //Returns the player who had turn before the player on given index.
     public Player getNextPlayer(int i) {
-        if (i == amountOfPlayers - 1) {
+        int totalPlayers = amountOfBots + amountOfPlayers;
+        if (i == totalPlayers - 1) {
             return players.get(0);
         } else {
             return players.get(i + 1);
@@ -337,6 +424,19 @@ public class Run {
         lastTurnSaidValue = getDiceValue(parsedDie1, parsedDie2);
 
     }
+    
+    public void botLieRoll() {
+        Random rand = new Random();
+        int parsedDie1 = rand.nextInt(6) + 1;
+        int parsedDie2 = rand.nextInt(6) + 1;
+        
+        if (currentValue > getDiceValue(parsedDie1, parsedDie2)) {
+            lieRoll();
+        }
+        
+        lastTurnActualValue = getDiceValue(dice1.getFaceValue(), dice2.getFaceValue());
+        lastTurnSaidValue = getDiceValue(parsedDie1, parsedDie2);
+    }
 
     //If the player tells the truth about their roll.
     public void truthRoll() {
@@ -367,8 +467,7 @@ public class Run {
             return checkPair(Integer.valueOf(String.valueOf(val2) + String.valueOf(val)));
         } else if (val == 3 && val2 == 2 || val == 2 && val2 == 3) {
             return checkBeerMeyer(Integer.valueOf(String.valueOf(val) + String.valueOf(val2)));
-        }  
-        else if (val > val2) {
+        } else if (val > val2) {
             return Integer.valueOf(String.valueOf(val) + String.valueOf(val2));
         }
         return Integer.valueOf(String.valueOf(val2) + String.valueOf(val));
